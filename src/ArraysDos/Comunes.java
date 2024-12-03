@@ -2,7 +2,7 @@ package ArraysDos;
 
 import Utilidades.Utilidades;
 
-//hdhd
+//hdhddff
 
 public class Comunes {
     public static void main(String[] args) {
