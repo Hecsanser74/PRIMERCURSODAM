@@ -17,24 +17,18 @@ public class Altura {
 
         scanner.close();
 
-        System.out.println("-----------------------");
         System.out.println("Alturas intoducidas: ");
-        System.out.print("[ ");
         for (Double alturas  : altura){
             System.out.print( + alturas + ", ");
         }
-        System.out.print("]");
         System.out.println("");
 
         media = calcularMedia(altura,contAlumnos);
-        System.out.println("-----------------");
         System.out.println("La altura media de la clase es de:");
         System.out.println(calcularMedia(altura, contAlumnos));
 
-        System.out.println("------------------");
         System.out.println(calcularSuperior(altura, media) + " alumnos por encima de la media");
 
-        System.out.println("------------------");
         System.out.println(calcularInferior(altura, media) + " alumnos por debajo de la media");
     }
 
