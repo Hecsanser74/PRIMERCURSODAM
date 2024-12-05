@@ -7,36 +7,34 @@ public class Altura {
         Scanner scanner = new Scanner(System.in);
 
         ArrayList<Double> altura = new ArrayList<Double>();
-        String alumnos = "";
-        int contAlumnos = 1;
-        int Altos = 0;
+        int contadorAlu = 1;
         double media = 0;
 
-        contAlumnos = numeroAlumnos(contAlumnos);
-        leerAlturas(altura, contAlumnos);
+        contadorAlu = numeroAlumnos(contadorAlu);
+        leerAlturas(altura, contadorAlu);
 
         scanner.close();
 
-        System.out.println("Alturas intoducidas: ");
-        for (Double alturas  : altura){
-            System.out.print( + alturas + ", ");
+        System.out.println("Alturas de los alumnos: ");
+        for (Double i  : altura){
+            System.out.print( + i + ", ");
         }
-        System.out.println("");
+        System.out.println();
 
-        media = calcularMedia(altura,contAlumnos);
-        System.out.println("La altura media de la clase es de:");
-        System.out.println(calcularMedia(altura, contAlumnos));
+        media = calcularMedia(altura,contadorAlu);
+        System.out.println("La media de las alturas es de:");
+        System.out.println(calcularMedia(altura, contadorAlu));
 
         System.out.println(calcularSuperior(altura, media) + " alumnos por encima de la media");
 
         System.out.println(calcularInferior(altura, media) + " alumnos por debajo de la media");
     }
 
-    public static int numeroAlumnos (int contAlumnos){
+    public static int numeroAlumnos (int contadorAlu){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Introduce el numero de alumnos de la clase: ");
-        contAlumnos = scanner.nextInt();
-        return contAlumnos;
+        System.out.println("Cuantos alumnos hay en clase?: ");
+        contadorAlu = scanner.nextInt();
+        return contadorAlu;
     }
 
     public static ArrayList<Double> leerAlturas (ArrayList<Double>altura, int contAlumnos){
