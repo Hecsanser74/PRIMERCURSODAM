@@ -26,7 +26,7 @@ public class Anagramas {
             mapa1.put(alphabetize(line), palabrasIguales);
 
             if (mapa1.get(alphabetize(line)).size() > valoresMinimos){
-                System.out.println(alphabetize(line) +" -- " + mapa1.get(alphabetize(line)));
+                System.out.println(alphabetize(line) +" -- " + mapa1.get(alphabetize(line)) + " -- " + mapa1.get(alphabetize(line)).size());
             }
 
         }
