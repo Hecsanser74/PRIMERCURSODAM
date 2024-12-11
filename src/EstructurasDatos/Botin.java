@@ -46,7 +46,7 @@ public class Botin {
 
             // Pasamos al siguiente miembro
             miembroActual++;
-            if (miembroActual == tripulantes) { // Si llegamos al final de los miembros, reiniciar
+            if (miembroActual == tripulantes) {
                 miembroActual = 0;
             }
         }
