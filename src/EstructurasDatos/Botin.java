@@ -7,54 +7,43 @@ import java.util.Scanner;
 
 public class Botin {
     public static void main(String[] args) {
-        ArrayList<Integer> dinero = new ArrayList<>();
-        Map<Integer, ArrayList<Integer>> mapa1 = new HashMap<>();
-        int tripulantes;
-        String billete;
-        int billeteInt;
-        int miembroActual = 0;
         Scanner inputValue = new Scanner(System.in);
+        HashMap<Integer, ArrayList<String>> reparto = new HashMap<>();
+        ArrayList<Integer> billetes = new ArrayList<>();
+        int dineroescrito;
+        int miembroActual = 0;
+        int participantes = 0;
 
-        //Pedimos miembros de la banda
-        System.out.println("Introduce cuantos tripulantes sois en la banda: ");
-        tripulantes = inputValue.nextInt();
+        //Pedimos numero de participantes en el golpe
+        System.out.println("Introduce el numero de trripulantes que participan en el golpe: ");
+        participantes = inputValue.nextInt();
 
-        // Inicializar el mapa para los miembros
-        for (int i = 0; i < tripulantes; i++) {
-            mapa1.put(i, new ArrayList<>());
+        //for para guardar los tripulantes en el mapa (1, 2, 3) asi
+        for (int i = 0; i < participantes; i++){
+            reparto.put(i, new ArrayList<>());
         }
 
-        //Pedimos los billetes uno a uno
-        inputValue.nextLine();
-        while (true) {
-            System.out.println("Introduce aqui los billetes que hay uno a uno por su valor, para salir pulsa enter en vacio: ");
-            billete = inputValue.nextLine();
+        //Pedimos los billetes en un bucle true ya que no sabemos cuantos hay
+        while (true){
+            System.out.println("Introduce un billete: ");
+            dineroescrito = inputValue.nextInt();
 
-            //Si dejamos en blanco se termina
-            if (billete.isBlank()) {
-                break;
-            }
+            if (dineroescrito < 0) break;
 
-            //Lo pasamos a Integuer ya que lo teniamos como String, ya que si es integuer no dejaba poner el Blank
-            billeteInt = Integer.parseInt(billete);
-            dinero.add(billeteInt);
+            billetes.add(dineroescrito);
         }
 
-        for (int i : dinero) {
-            // Ponemos que el billete actual se lo quede el miembro actual
-            mapa1.get(miembroActual).add(i);
-
-            // Pasamos al siguiente miembro
+        //Decimos que el billete actual es para el miembro actual
+        for (int i : billetes){
+            reparto.get(miembroActual).add(String.valueOf(i));
             miembroActual++;
-            if (miembroActual == tripulantes) {
+            if (miembroActual == participantes){
                 miembroActual = 0;
             }
         }
 
-        // Mostramos el reparto de billetes
-        System.out.println("Reparto de billetes:");
-        for (int i = 0; i < mapa1.size(); i++) {
-            System.out.println("Miembro " + (i + 1) + ": " + mapa1.get(i));
-        }
+        System.out.println(reparto);
+
+
     }
 }

@@ -20,3 +20,4 @@ public class HashMaps {
 }
 
 //almacena pares de clave-valor. Es útil cuando quieres asociar una clave con un valor
+//Para que almacene dos valores en una clave hay que poner una array list como en el ejercio telefonos2
