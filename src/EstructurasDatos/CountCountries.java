@@ -9,29 +9,35 @@ import java.util.Scanner;
 
 public class CountCountries {
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("Colfuturo-Seleccionados.csv"));
         Scanner inputValue = new Scanner(System.in);
-        Map<String, Integer> mapa1 = new HashMap<>();
         String line;
         String pais;
 
         System.out.println("Introduce el pais del que quieras saber los aumnos: ");
         pais = inputValue.nextLine();
+        System.out.println("De este pais hay " +paisPers().get(pais)+ " personas");
+        System.out.println();
+        System.out.println(paisPers());
 
-        while ((line = reader.readLine())!=null) {
+    }
 
+    public static HashMap<String, Integer> paisPers() throws IOException {
+        HashMap<String, Integer> mapaCountry = new HashMap<>();
+        BufferedReader reader = new BufferedReader(new FileReader("/home/hector/Descargas/Colfuturo-Seleccionados.csv"));
+        String line = reader.readLine();
+        while ((line = reader.readLine()) != null) {
             String[] saltos = line.split(",");
-
-            Integer freq = mapa1.get(saltos[6]);
-            if (freq == null)
-                mapa1.put(saltos[6], 1);
-
-            else mapa1.put(saltos[6], freq+1);
-
-            mapa1.put(saltos[6], freq==null ? 1: freq+1);
+            String pais = saltos[6];
+            Integer cuantoSale = mapaCountry.get(pais);
+            if (cuantoSale == null) {
+                mapaCountry.put(pais, 1);
+            } else {
+                mapaCountry.put(pais, cuantoSale + 1);
+            }
         }
-
-        System.out.println("En este pais la antidad de alumnos es la siguiente: "+mapa1.getOrDefault(pais, 0));
         reader.close();
+        return mapaCountry;
     }
 }
+
+
