@@ -1,3 +1,5 @@
+package Metodos.AlgorMetodo;
+
 import java.util.Scanner;
 
 public class Salario {

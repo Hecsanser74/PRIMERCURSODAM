@@ -1,7 +1,6 @@
 package Flujos_Streams;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class Person2 {
     public static void main(String[] args) {

@@ -1,3 +1,5 @@
+package Metodos.AlgorMetodo;
+
 public class ComentarioMetodos {
  /**
  * Los primeros 500 € son libres de impuestos. Los próximos 400 € tienen un

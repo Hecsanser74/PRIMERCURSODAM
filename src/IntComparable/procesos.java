@@ -1,6 +1,5 @@
 package IntComparable;
 
-import Flujos_Streams.Person;
 
 public class procesos {
     private int prioridad;
