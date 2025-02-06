@@ -1,7 +1,5 @@
-package POO.ejercicio9;
-
-import java.util.HashSet;
-import java.util.Set;
+package POO.Ejercicio9;
+//
 
 public class MainLab {
     public static void main(String[] args) {

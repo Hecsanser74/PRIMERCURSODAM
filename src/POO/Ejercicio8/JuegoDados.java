@@ -1,4 +1,4 @@
-package POO.ejercicio8;
+package POO.Ejercicio8;
 
 public class JuegoDados {
     //Perimer metodo

@@ -1,6 +1,4 @@
-package POO.ejercicio9;
-
-import POO.ejercicio7.Llibre;
+package POO.Ejercicio9;
 
 import java.util.HashSet;
 import java.util.Set;

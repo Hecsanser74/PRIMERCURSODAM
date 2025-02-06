@@ -1,4 +1,4 @@
-package POO.ejercicio7;
+package POO.Ejercicio7;
 
 public class Prestec {
     private String data_p; //Identificador de Prestec

@@ -1,4 +1,4 @@
-package POO.ejercicio7;
+package POO.Ejercicio7;
 
 import java.util.HashSet;
 import java.util.Set;
