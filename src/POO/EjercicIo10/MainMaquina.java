@@ -1,4 +1,4 @@
-package POO.Ejercicio10;
+package POO.EjercicIo10;
 
 import java.util.Scanner;
 

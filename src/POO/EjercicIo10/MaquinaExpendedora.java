@@ -1,4 +1,4 @@
-package POO.Ejercicio10;
+package POO.EjercicIo10;
 
 public class MaquinaExpendedora {
     private double precioTicket;
