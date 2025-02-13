@@ -8,6 +8,7 @@ public class Lote {
     private double precioSalida;
     private Set<Articulo> articuloSet;
     private Pujador pujador;
+    private double pujaMaxima;
 
     //Getters
     public double getPrecioSalida() {
@@ -24,6 +25,10 @@ public class Lote {
 
     public Pujador getPujador() {
         return pujador;
+    }
+
+    public double getPujaMaxima() {
+        return pujaMaxima;
     }
 
     //Setters
@@ -43,11 +48,23 @@ public class Lote {
         this.pujador = pujador;
     }
 
-    //Constructor
+    public void setPujaMaxima(double pujaMaxima) {
+        this.pujaMaxima = pujaMaxima;
+    }
 
-    public Lote (int numero, double precioSalida) {
+    //Metodo
+    public void añadirPuja(Puja puja) {
+        if (puja.getCantidad() > pujaMaxima) {
+            pujaMaxima = puja.getCantidad();
+            this.pujador = puja.getPujador();
+        }
+    }
+
+    // Constructor
+    public Lote(int numero, double precioSalida) {
         this.numero = numero;
         this.precioSalida = precioSalida;
         this.articuloSet = new HashSet<>();
+        this.pujaMaxima = precioSalida;
     }
 }

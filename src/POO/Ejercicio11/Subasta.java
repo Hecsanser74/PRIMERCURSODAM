@@ -18,8 +18,15 @@ public class Subasta {
         this.lote = lote;
     }
 
-    public void setDiaSubasta(String diaSubasta) {
-        this.diaSubasta = diaSubasta;
+    public void setDiaSubasta(String diaSubasta){ this.diaSubasta = diaSubasta; }
+
+    //Metodo
+    public void cerrarSubasta() {
+        if (lote.getPujador() != null) {
+            System.out.println("Lote " + lote.getNumero() + " adjudicado a " + lote.getPujador().getNombre() + " por " + lote.getPujaMaxima() + "€");
+        } else {
+            System.out.println("Lote " + lote.getNumero() + " no adjudicado");
+        }
     }
 
     //Constructor
