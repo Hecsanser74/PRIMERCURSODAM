@@ -1,5 +1,7 @@
 package POO.Herencias.Network;
 
+import POO.Herencias.Network.Publicacion;
+
 public class PubTexto extends Publicacion {
     private String mensaje;
 

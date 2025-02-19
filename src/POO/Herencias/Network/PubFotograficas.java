@@ -1,5 +1,7 @@
 package POO.Herencias.Network;
 
+import POO.Herencias.Network.Publicacion;
+
 public class PubFotograficas extends Publicacion {
     private String nombreArchivo;
     private String titulo;
