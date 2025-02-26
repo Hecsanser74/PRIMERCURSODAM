@@ -1,5 +1,5 @@
 package BasesDatos.basedatos;
-import BasesDatos.clases.DatabaseConnection;
+import BasesDatos.ejercicio1.ConnectionFactura;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,7 +10,7 @@ public class TestSelect {
     public static void main(String[] args) {
         String sql = "SELECT * FROM instituts"; // Cambia "tu_tabla" por una tabla real
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = ConnectionFactura.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
