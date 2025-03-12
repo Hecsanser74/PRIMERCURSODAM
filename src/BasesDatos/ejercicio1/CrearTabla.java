@@ -1,5 +1,4 @@
 package BasesDatos.ejercicio1;
-import BasesDatos.clases.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
