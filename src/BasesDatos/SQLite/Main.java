@@ -10,11 +10,10 @@ public class Main {
 
         do {
             System.out.println("\n=== Menú de Gestión - Biblioteca ===");
-            System.out.println("1. Añadir un nuevo libro");
-            System.out.println("2. Consultar un libro por ISBN");
-            System.out.println("3. Actualizar un libro por ISBN");
-            System.out.println("4. Eliminar un libro por ISBN");
-            System.out.println("5. Mostrar todos los libros");
+            System.out.println("1. Gestión de Libros");
+            System.out.println("2. Gestión de Clientes");
+            System.out.println("3. Gestión de Empleados");
+            System.out.println("4. Creación de Tablas");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
@@ -22,19 +21,79 @@ public class Main {
 
             switch (opcion) {
                 case 1:
-                    BasesDatos.SQLite.Biblioteca.añadirLibro();
+                    System.out.println("\n=== Menú de Gestión - Libros ===");
+                    System.out.println("1. Añadir un nuevo libro");
+                    System.out.println("2. Consultar un libro por ISBN");
+                    System.out.println("3. Actualizar un libro por ISBN");
+                    System.out.println("4. Eliminar un libro por ISBN");
+                    System.out.println("5. Mostrar todos los libros");
+                    System.out.println("0. Salir");
+                    System.out.print("Seleccione una opción: ");
+                    opcion = scanner.nextInt();
+                    scanner.nextLine();
+
+                    switch (opcion) {
+                        case 1:
+                            Biblioteca.añadirLibro();
+                            break;
+                        case 2:
+                            Biblioteca.consultarLibroPorISBN();
+                            break;
+                        case 3:
+                            Biblioteca.actualizarLibroPorISBN();
+                        case 4:
+                            Biblioteca.eliminarLibroPorISBN();
+                            break;
+                        case 5:
+                            Biblioteca.mostrarTodosLosLibros();
+                            break;
+                        case 0:
+                            System.out.println("Saliendo...");
+                            break;
+                        default:
+                            System.out.println("Opcion no valida. Intente de nuevo.");
+                    }
                     break;
                 case 2:
-                    BasesDatos.SQLite.Biblioteca.consultarLibroPorISBN();
+                    System.out.println("\n=== Menú de Gestión - Clientes ===");
+                    System.out.println("1. Añadir un nuevo Cliente");
+                    System.out.println("2. Consultar un cliente por DNI");
+                    System.out.println("3. Actualizar un cliente por DNI");
+                    System.out.println("4. Eliminar un cliente por DNI");
+                    System.out.println("5. Mostrar todos los clientes");
+                    System.out.println("0. Salir");
+                    System.out.print("Seleccione una opción: ");
+                    opcion = scanner.nextInt();
+                    scanner.nextLine();
+
+                    switch (opcion) {
+                        case 1:
+                            Clientes.añadirCliente();
+                            break;
+                        case 2:
+                            Clientes.consultarClienteDNI();
+                            break;
+                    }
                     break;
                 case 3:
-                    BasesDatos.SQLite.Biblioteca.actualizarLibroPorISBN();
+                    Biblioteca.actualizarLibroPorISBN();
                     break;
                 case 4:
-                    BasesDatos.SQLite.Biblioteca.eliminarLibroPorISBN();
-                    break;
-                case 5:
-                    BasesDatos.SQLite.Biblioteca.mostrarTodosLosLibros();
+                    System.out.println("\n=== Menú de Creación - Tablas ===");
+                    System.out.println("1. Añadir la tabla Clientes");
+                    System.out.println("2. Añadir la tabla Empleados");
+                    System.out.println("0. Salir");
+                    System.out.print("Seleccione una opción: ");
+                    opcion = scanner.nextInt();
+                    scanner.nextLine();
+
+                    switch (opcion) {
+                        case 1:
+                            Clientes.crearTabla();
+                            break;
+                        default:
+                            System.out.println("Opción no valida intentalo de nuevo.");
+                    }
                     break;
                 case 0:
                     System.out.println("Saliendo...");
