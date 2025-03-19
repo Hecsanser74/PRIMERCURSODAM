@@ -13,7 +13,8 @@ public class Main {
             System.out.println("1. Gestión de Libros");
             System.out.println("2. Gestión de Clientes");
             System.out.println("3. Gestión de Empleados");
-            System.out.println("4. Creación de Tablas");
+            System.out.println("4. Gestión de Reservas");
+            System.out.println("5. Creación de Tablas");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
@@ -55,33 +56,19 @@ public class Main {
                     }
                     break;
                 case 2:
-                    System.out.println("\n=== Menú de Gestión - Clientes ===");
-                    System.out.println("1. Añadir un nuevo Cliente");
-                    System.out.println("2. Consultar un cliente por DNI");
-                    System.out.println("3. Actualizar un cliente por DNI");
-                    System.out.println("4. Eliminar un cliente por DNI");
-                    System.out.println("5. Mostrar todos los clientes");
-                    System.out.println("0. Salir");
-                    System.out.print("Seleccione una opción: ");
-                    opcion = scanner.nextInt();
-                    scanner.nextLine();
-
-                    switch (opcion) {
-                        case 1:
-                            Clientes.añadirCliente();
-                            break;
-                        case 2:
-                            Clientes.consultarClienteDNI();
-                            break;
-                    }
+                    Clientes.menuClientes();
                     break;
                 case 3:
-                    Biblioteca.actualizarLibroPorISBN();
+                    Empleados.menuEmpleados();
                     break;
                 case 4:
+                    Reservas.menuCReservas();
+                    break;
+                case 5:
                     System.out.println("\n=== Menú de Creación - Tablas ===");
                     System.out.println("1. Añadir la tabla Clientes");
                     System.out.println("2. Añadir la tabla Empleados");
+                    System.out.println("3. Añadir la tabla Reservas");
                     System.out.println("0. Salir");
                     System.out.print("Seleccione una opción: ");
                     opcion = scanner.nextInt();
@@ -90,6 +77,12 @@ public class Main {
                     switch (opcion) {
                         case 1:
                             Clientes.crearTabla();
+                            break;
+                        case 2:
+                            Empleados.crearTabla();
+                            break;
+                        case 3:
+                            Reservas.crearTabla();
                             break;
                         default:
                             System.out.println("Opción no valida intentalo de nuevo.");
