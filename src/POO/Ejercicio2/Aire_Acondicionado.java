@@ -42,10 +42,12 @@ public class Aire_Acondicionado {
     //Metodos Subir y bajar temperatura
     public void subirTemperatira (){
         if (tempActual < tempMaxima) tempActual++;
+        else System.out.println("La temperatura no puede subir mas");
     }
 
     public void bajarTemperatura (){
         if (tempActual > tempMinima) tempActual--;
+        else System.out.println("La temperatura no puede bajar mas");
     }
 
 
