@@ -35,7 +35,6 @@ public class Main {
 
                     switch (opcion) {
                         case 1:
-                            Biblioteca.añadirLibro();
                             break;
                         case 2:
                             Biblioteca.consultarLibroPorISBN();

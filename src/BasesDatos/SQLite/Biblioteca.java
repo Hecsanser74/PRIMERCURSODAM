@@ -9,22 +9,11 @@ import java.sql.Statement;
 public class Biblioteca {
 
 
-    public static void añadirLibro() {
+    public static void añadirLibro(String isbn, String titulo, String autor, int AñoPublicacion, int precio) {
 
         Connection con = null;
         PreparedStatement st = null;
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el ISBN: ");
-        String isbn = scanner.nextLine();
-        System.out.print("Escribe el título: ");
-        String titulo = scanner.nextLine();
-        System.out.print("Escribe el autor: ");
-        String autor = scanner.nextLine();
-        System.out.print("Escribe el año de publicación: ");
-        int AñoPublicacion = scanner.nextInt();
-        System.out.print("Escribe el precio: ");
-        int precio = scanner.nextInt();
 
         String sql = "INSERT INTO libros (ISBN, Titulo, Autor, AñoPublicacion, Precio) VALUES (?, ?, ?, ?, ?)";
 
@@ -47,14 +36,10 @@ public class Biblioteca {
     }
 
 
-    public static void consultarLibroPorISBN() {
+    public static void consultarLibroPorISBN(String isbn) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el ISBN del libro: ");
-        String isbn = scanner.nextLine();
 
         String sql = "SELECT * FROM libros WHERE ISBN = ?";
 
