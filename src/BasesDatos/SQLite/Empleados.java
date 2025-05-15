@@ -4,6 +4,8 @@ import POO.Ejercicio5.Client;
 import POO.Herencias.Trabajadores.Empleado;
 import org.checkerframework.checker.units.qual.N;
 
+import javax.swing.*;
+import java.awt.*;
 import java.sql.*;
 import java.util.Scanner;
 
@@ -16,101 +18,24 @@ public class Empleados {
         this.Nombre = Nombre;
     }
 
-    public static void menuEmpleados() {
-        Scanner scanner = new Scanner(System.in);
-        int opcion;
-
-        do {
-            System.out.println("\n=== Menú de Gestión - Empleados ===");
-            System.out.println("1. Añadir un nuevo Empleado");
-            System.out.println("2. Consultar un empleado por DNI");
-            System.out.println("3. Actualizar un empleado por DNI");
-            System.out.println("4. Eliminar un empleado por DNI");
-            System.out.println("5. Mostrar todos los empleados");
-            System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (opcion) {
-                case 1:
-                    añadirEmpleado();
-                    break;
-                case 2:
-                    consultarEmpleadoDNI();
-                    break;
-                case 3:
-                    actualizarEmpleadoPorDNI();
-                    break;
-                case 4:
-                    eliminarEmpleadoPorDNI();
-                    break;
-                case 5:
-                    mostrarTodosLosEmpleados();
-                    break;
-                default:
-                    System.out.println("Opcion no valida prueba otra vez.");
-            }
-        } while (opcion != 0);
-    }
-
-    public static void crearTabla(){
-
-        Connection con = null;
-        Statement st = null;
-
-        try {
-            con = DataBaseConnectionBiblio.getConnection();
-            st = con.createStatement();
-
-            String sql = "CREATE TABLE Empleados (DNI varchar(9) CONSTRAINT DNI PRIMARY KEY, Nombre varchar(30))";
-            st.executeUpdate(sql);
-
-        } catch (SQLException ex) {
-            System.out.println("Error al añadir la tabla: " + ex.getMessage());
-        } finally {
-            try {
-                if (st != null && !st.isClosed()) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println("No se ha podido cerrar el Statement");
-            }
-
-            try {
-                if (con != null && !con.isClosed()) {
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println("No se ha podido cerrar la conexion");
-            }
-        }
-    }
-    public static void añadirEmpleado() {
+    public static void añadirEmpleado(String DNI, String Nombre) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el DNI: ");
-        String DNI = scanner.nextLine();
-        System.out.print("Escribe el Nombre: ");
-        String Nombre = scanner.nextLine();
-
         String sql = "INSERT INTO Empleados (DNI, Nombre) VALUES (?, ?)";
 
         try {
 
             con = DataBaseConnectionBiblio.getConnection();
             st = con.prepareStatement(sql);
-
             st.setString(1, DNI);
             st.setString(2, Nombre);
             st.executeUpdate();
-            System.out.println("Empleado agregado con éxito.");
+            JOptionPane.showMessageDialog(null, "Empleado agregado con éxito");
 
         } catch (SQLException ex) {
-            System.out.println("Error al agregar el Empleado: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al agregar empleado: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -130,34 +55,35 @@ public class Empleados {
         }
     }
 
-    public static void consultarEmpleadoDNI() {
+    public static void consultarEmpleadoDNI(String DNI) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el DNI del empleado: ");
-        String DNI = scanner.nextLine();
-
         String sql = "SELECT * FROM Empleados WHERE DNI = ?";
 
         try {
-
             con = DataBaseConnectionBiblio.getConnection();
             st = con.prepareStatement(sql);
-
             st.setString(1, DNI);
             ResultSet rs = st.executeQuery();
 
-            if (rs.next()) {
-                System.out.println("DNI: " + rs.getString("DNI"));
-                System.out.println("Nombre: " + rs.getString("Nombre"));
-            } else {
-                System.out.println("No se encontró un empleado con el DNI proporcionado.");
-            }
+            JFrame resultado = new JFrame("Resultado Consulta");
+            resultado.setLayout(new GridLayout(2, 1));
+            resultado.setSize(300, 150);
+            resultado.setLocationRelativeTo(null);
 
+            if (rs.next()) {
+                JLabel lblDNI = new JLabel("DNI: " + rs.getString("DNI"));
+                JLabel lblNombre = new JLabel("Nombre: " + rs.getString("Nombre"));
+                resultado.add(lblDNI);
+                resultado.add(lblNombre);
+            } else {
+                resultado.add(new JLabel("No se encontró el empleado"));
+            }
+            resultado.setVisible(true);
         } catch (SQLException ex) {
-            System.out.println("Error al consultar el empleado: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al consultar: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -177,16 +103,10 @@ public class Empleados {
         }
     }
 
-    public static void actualizarEmpleadoPorDNI() {
+    public static void actualizarEmpleadoPorDNI(String Nombre, String DNI) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el DNI del empleado a actualizar: ");
-        String DNI = scanner.nextLine();
-        System.out.print("Escribe el nuevo Nombre: ");
-        String Nombre = scanner.nextLine();
 
         String sql = "UPDATE Empleados SET Nombre = ? WHERE DNI = ?";
 
@@ -199,13 +119,13 @@ public class Empleados {
             int filasActualizadas = st.executeUpdate();
 
             if (filasActualizadas > 0) {
-                System.out.println("Empleado actualizado con éxito.");
+                JOptionPane.showMessageDialog(null, "Empleado actualizado con éxito.");
             } else {
-                System.out.println("No se encontró un empleado con el DNI proporcionado.");
+                JOptionPane.showMessageDialog(null, "No se encontró el Empleado.", "Error", JOptionPane.WARNING_MESSAGE);
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al actualizar el empleado: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al actualizar empleado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -225,14 +145,10 @@ public class Empleados {
         }
     }
 
-    public static void eliminarEmpleadoPorDNI() {
+    public static void eliminarEmpleadoPorDNI(String DNI) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el DNI del empleado a eliminar: ");
-        String isbn = scanner.nextLine();
 
         String sql = "DELETE FROM Empleados WHERE DNI = ?";
 
@@ -241,17 +157,18 @@ public class Empleados {
             con = DataBaseConnectionBiblio.getConnection();
             st = con.prepareStatement(sql);
 
-            st.setString(1, isbn);
+            st.setString(1, DNI);
             int filasEliminadas = st.executeUpdate();
 
             if (filasEliminadas > 0) {
-                System.out.println("Empleado eliminado con éxito :).");
+                JOptionPane.showMessageDialog(null, "Empleado eliminado con éxito.");
             } else {
-                System.out.println("No se encontró un empleado con el DNI proporcionado :(.");
+                JOptionPane.showMessageDialog(null, "No se encontró el empleado.", "Error", JOptionPane.WARNING_MESSAGE);
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al eliminar el empleado: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al eliminar: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -270,6 +187,7 @@ public class Empleados {
             }
         }
     }
+
     public static void mostrarTodosLosEmpleados() {
 
         Connection con = null;
@@ -279,17 +197,46 @@ public class Empleados {
         String sql = "SELECT * FROM Empleados";
 
         try {
-
             con = DataBaseConnectionBiblio.getConnection();
             st = con.createStatement();
             rs = st.executeQuery(sql);
 
-            System.out.println("=== Lista de Empleados ===");
+            JFrame mostrarEmpleadosFrame = new JFrame("Lista de Todos los Empleados");
+            mostrarEmpleadosFrame.setSize(800, 600);
+            mostrarEmpleadosFrame.setLocationRelativeTo(null);
+            mostrarEmpleadosFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+            JPanel panelPrincipal = new JPanel();
+            panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
+            JScrollPane scrollPane = new JScrollPane(panelPrincipal);
+            mostrarEmpleadosFrame.add(scrollPane);
+            
             while (rs.next()) {
-                System.out.println("DNI: " + rs.getString("DNI"));
-                System.out.println("Nombre: " + rs.getString("Nombre"));
-                System.out.println("-----------------------------");
+                JPanel panelEmpleado = new JPanel(new GridLayout(0, 2, 10, 5));
+                panelEmpleado.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+                JLabel labelDNI = new JLabel("DNI:");
+                JLabel valorDNI = new JLabel(rs.getString("DNI"));
+
+                JLabel labelNombre = new JLabel("Nombre:");
+                JLabel valorNombre = new JLabel(rs.getString("Nombre"));
+
+                panelEmpleado.add(labelDNI);
+                panelEmpleado.add(valorDNI);
+                panelEmpleado.add(labelNombre);
+                panelEmpleado.add(valorNombre);
+
+                panelPrincipal.add(panelEmpleado);
+                panelPrincipal.add(new JSeparator(SwingConstants.HORIZONTAL));
             }
+
+            if (!rs.isBeforeFirst()) {
+                JLabel noEmpleados = new JLabel("No hay reservas registradas.");
+                noEmpleados.setHorizontalAlignment(SwingConstants.CENTER);
+                panelPrincipal.add(noEmpleados);
+            }
+
+            mostrarEmpleadosFrame.setVisible(true);
 
         } catch (SQLException ex) {
             System.out.println("Error al mostrar los empleados: " + ex.getMessage());

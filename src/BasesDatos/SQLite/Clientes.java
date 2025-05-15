@@ -1,5 +1,7 @@
 package BasesDatos.SQLite;
 
+import javax.swing.*;
+import java.awt.*;
 import java.sql.*;
 import java.util.Scanner;
 
@@ -30,16 +32,12 @@ public class Clientes {
 
             switch (opcion) {
                 case 1:
-                    Clientes.añadirCliente();
                     break;
                 case 2:
-                    Clientes.consultarClienteDNI();
                     break;
                 case 3:
-                    Clientes.actualizarClientePorDNI();
                     break;
                 case 4:
-                    Clientes.eliminarClientePorDNI();
                     break;
                 case 5:
                     Clientes.mostrarTodosLosClientes();
@@ -84,31 +82,21 @@ public class Clientes {
 
     }
 
-    public static void añadirCliente() {
-
+    public static void añadirCliente(String DNI, String Nombre) {
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el DNI: ");
-        String DNI = scanner.nextLine();
-        System.out.print("Escribe el Nombre: ");
-        String Nombre = scanner.nextLine();
-
         String sql = "INSERT INTO Clientes (DNI, Nombre) VALUES (?, ?)";
 
         try {
-
             con = DataBaseConnectionBiblio.getConnection();
             st = con.prepareStatement(sql);
-
             st.setString(1, DNI);
             st.setString(2, Nombre);
             st.executeUpdate();
-            System.out.println("Cliente agregado con éxito.");
-
+            JOptionPane.showMessageDialog(null, "Cliente agregado con éxito");
         } catch (SQLException ex) {
-            System.out.println("Error al agregar el Cliente: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al agregar cliente: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -128,34 +116,36 @@ public class Clientes {
         }
     }
 
-    public static void consultarClienteDNI() {
+    public static void consultarClienteDNI(String DNI) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el DNI del cliente: ");
-        String DNI = scanner.nextLine();
-
         String sql = "SELECT * FROM Clientes WHERE DNI = ?";
 
         try {
 
             con = DataBaseConnectionBiblio.getConnection();
             st = con.prepareStatement(sql);
-
             st.setString(1, DNI);
             ResultSet rs = st.executeQuery();
 
-            if (rs.next()) {
-                System.out.println("DNI: " + rs.getString("DNI"));
-                System.out.println("Nombre: " + rs.getString("Nombre"));
-            } else {
-                System.out.println("No se encontró un cliente con el DNI proporcionado.");
-            }
+            JFrame resultado = new JFrame("Resultado Consulta");
+            resultado.setLayout(new GridLayout(2, 1));
+            resultado.setSize(300, 150);
+            resultado.setLocationRelativeTo(null);
 
+            if (rs.next()) {
+                JLabel lblDNI = new JLabel("DNI: " + rs.getString("DNI"));
+                JLabel lblNombre = new JLabel("Nombre: " + rs.getString("Nombre"));
+                resultado.add(lblDNI);
+                resultado.add(lblNombre);
+            } else {
+                resultado.add(new JLabel("No se encontró el cliente"));
+            }
+            resultado.setVisible(true);
         } catch (SQLException ex) {
-            System.out.println("Error al consultar el cliente: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al consultar: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -175,16 +165,10 @@ public class Clientes {
         }
     }
 
-    public static void actualizarClientePorDNI() {
+    public static void actualizarClientePorDNI(String Nombre, String DNI) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el DNI del cliente a actualizar: ");
-        String DNI = scanner.nextLine();
-        System.out.print("Escribe el nuevo Nombre: ");
-        String Nombre = scanner.nextLine();
 
         String sql = "UPDATE Clientes SET Nombre = ? WHERE DNI = ?";
 
@@ -197,13 +181,13 @@ public class Clientes {
             int filasActualizadas = st.executeUpdate();
 
             if (filasActualizadas > 0) {
-                System.out.println("Cliente actualizado con éxito.");
+                JOptionPane.showMessageDialog(null, "Cliente actualizado con éxito.");
             } else {
-                System.out.println("No se encontró un cliente con el DNI proporcionado.");
+                JOptionPane.showMessageDialog(null, "No se encontró el Cliente.", "Error", JOptionPane.WARNING_MESSAGE);
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al actualizar el cliente: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al actualizar cliente: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -223,14 +207,10 @@ public class Clientes {
         }
     }
 
-    public static void eliminarClientePorDNI() {
+    public static void eliminarClientePorDNI(String DNI) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el DNI del Cliente a eliminar: ");
-        String isbn = scanner.nextLine();
 
         String sql = "DELETE FROM Clientes WHERE DNI = ?";
 
@@ -239,17 +219,18 @@ public class Clientes {
             con = DataBaseConnectionBiblio.getConnection();
             st = con.prepareStatement(sql);
 
-            st.setString(1, isbn);
+            st.setString(1, DNI);
             int filasEliminadas = st.executeUpdate();
 
             if (filasEliminadas > 0) {
-                System.out.println("Cliente eliminado con éxito :).");
+                JOptionPane.showMessageDialog(null, "Cliente eliminado con éxito.");
             } else {
-                System.out.println("No se encontró un cliente con el DNI proporcionado :(.");
+                JOptionPane.showMessageDialog(null, "No se encontró el cliente.", "Error", JOptionPane.WARNING_MESSAGE);
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al eliminar el cliente: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al eliminar: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -268,8 +249,8 @@ public class Clientes {
             }
         }
     }
+    
     public static void mostrarTodosLosClientes() {
-
         Connection con = null;
         Statement st = null;
         ResultSet rs = null;
@@ -277,22 +258,51 @@ public class Clientes {
         String sql = "SELECT * FROM Clientes";
 
         try {
-
             con = DataBaseConnectionBiblio.getConnection();
             st = con.createStatement();
             rs = st.executeQuery(sql);
 
-            System.out.println("=== Lista de Clientes ===");
+            JFrame mostrarClientesFrame = new JFrame("Lista de Todos los Clientes");
+            mostrarClientesFrame.setSize(800, 600);
+            mostrarClientesFrame.setLocationRelativeTo(null);
+            mostrarClientesFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+            JPanel panelPrincipal = new JPanel();
+            panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
+            JScrollPane scrollPane = new JScrollPane(panelPrincipal);
+            mostrarClientesFrame.add(scrollPane);
+
             while (rs.next()) {
-                System.out.println("DNI: " + rs.getString("DNI"));
-                System.out.println("Nombre: " + rs.getString("Nombre"));
-                System.out.println("-----------------------------");
+                JPanel panelCliente = new JPanel(new GridLayout(0, 2, 10, 5));
+                panelCliente.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+                JLabel labelDNI = new JLabel("DNI:");
+                JLabel valorDNI = new JLabel(rs.getString("DNI"));
+
+                JLabel labelNombre = new JLabel("Nombre:");
+                JLabel valorNombre = new JLabel(rs.getString("Nombre"));
+
+                panelCliente.add(labelDNI);
+                panelCliente.add(valorDNI);
+                panelCliente.add(labelNombre);
+                panelCliente.add(valorNombre);
+
+                panelPrincipal.add(panelCliente);
+                panelPrincipal.add(new JSeparator(SwingConstants.HORIZONTAL));
             }
 
+            if (!rs.isBeforeFirst()) {
+                JLabel noClientes = new JLabel("No hay clientes registrados.");
+                noClientes.setHorizontalAlignment(SwingConstants.CENTER);
+                panelPrincipal.add(noClientes);
+            }
+
+            mostrarClientesFrame.setVisible(true);
+
         } catch (SQLException ex) {
-            System.out.println("Error al mostrar los clientes: " + ex.getMessage());
-        }
-        finally {
+            JOptionPane.showMessageDialog(null, "Error al mostrar los clientes: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
             try {
                 if (st != null && !st.isClosed()) {
                     st.close();

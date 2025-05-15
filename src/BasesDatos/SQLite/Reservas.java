@@ -1,5 +1,7 @@
 package BasesDatos.SQLite;
 
+import javax.swing.*;
+import java.awt.*;
 import java.sql.*;
 import java.util.Scanner;
 
@@ -16,98 +18,11 @@ public class Reservas {
         this.fechaInicio = fechaInicio;
     }
 
-    public static void menuCReservas() {
-        Scanner scanner = new Scanner(System.in);
-        int opcion;
-
-        do {
-            System.out.println("\n=== Menú de Gestión - Reservas ===");
-            System.out.println("1. Añadir una nueva reserva");
-            System.out.println("2. Consultar una reserva por ID");
-            System.out.println("3. Actualizar una reserva por ID");
-            System.out.println("4. Eliminar una reserva por ID");
-            System.out.println("5. Imprimir Reserva por ID");
-            System.out.println("6. Mostrar todas las reservas");
-            System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (opcion) {
-                case 1:
-                    añadirReserva();
-                    break;
-                case 2:
-                    consultarReservaID();
-                    break;
-                case 3:
-                    actualizarReservaPorID();
-                    break;
-                case 4:
-                    eliminarReservaPorID();
-                    break;
-                case 5:
-                    imprimirReservaPorID();
-                    break;
-                case 6:
-                    mostrarTodasLasReservas();
-                    break;
-                default:
-                    System.out.println("Opcion no valida prueba otra vez.");
-            }
-        } while (opcion != 0);
-    }
-
-    public static void crearTabla() {
-
-        Connection con = null;
-        Statement st = null;
-
-        try {
-            con = DataBaseConnectionBiblio.getConnection();
-            st = con.createStatement();
-
-            String sql = "CREATE TABLE Reservas (ID_reserva varchar(9) CONSTRAINT ID_reserva PRIMARY KEY, DNI_Cliente varchar(30), TituloLibro varchar(30), FechaInicio varchar(30), FechaFinal varchar(30), CONSTRAINT DNI_Cliente FOREIGN KEY (DNI_Cliente) REFERENCES Clientes(DNI), CONSTRAINT TituloLibro FOREIGN KEY (TituloLibro) REFERENCES Biblioteca(Titulo))";
-            st.executeUpdate(sql);
-
-        } catch (SQLException ex) {
-            System.out.println("Error al añadir la tabla: " + ex.getMessage());
-        } finally {
-            try {
-                if (st != null && !st.isClosed()) {
-                    st.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println("No se ha podido cerrar el Statement");
-            }
-
-            try {
-                if (con != null && !con.isClosed()) {
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println("No se ha podido cerrar la conexion");
-            }
-        }
-
-    }
-
-    public static void añadirReserva() {
+    public static void añadirReserva(String DNI, String libro, String ID, String fechaInicio, String fechaFinal) {
 
         Connection con = null;
         PreparedStatement st = null;
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el DNI del Cliente: ");
-        String DNICli = scanner.nextLine();
-        System.out.print("Escribe el nombre del libro: ");
-        String libro = scanner.nextLine();
-        System.out.print("Escribe el ID de la reserva: ");
-        String id_reserva = scanner.nextLine();
-        System.out.print("Escribe cuando inicia la reserva: ");
-        String fechaInicio = scanner.nextLine();
-        System.out.print("Escribe cuando finaliza la reserva: ");
-        String fechaFinal = scanner.nextLine();
 
         String sql = "INSERT INTO Reservas (DNI_Cliente, TituloLibro, ID_reserva, FechaInicio, FechaFinal) VALUES (?, ?, ?, ?, ?)";
 
@@ -116,16 +31,17 @@ public class Reservas {
             con = DataBaseConnectionBiblio.getConnection();
             st = con.prepareStatement(sql);
 
-            st.setString(1, DNICli);
+            st.setString(1, DNI);
             st.setString(2, libro);
-            st.setString(3, id_reserva);
+            st.setString(3, ID);
             st.setString(4, fechaInicio);
             st.setString(5, fechaFinal);
             st.executeUpdate();
-            System.out.println("Reserva agregada con éxito.");
+            JOptionPane.showMessageDialog(null, "Reserva agregada con éxito");
 
         } catch (SQLException ex) {
-            System.out.println("Error al agregar reserva: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al añadir reserva: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -145,14 +61,10 @@ public class Reservas {
         }
     }
 
-    public static void consultarReservaID() {
+    public static void consultarReservaID(String ID) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el ID de la reserva: ");
-        String DNI = scanner.nextLine();
 
         String sql = "SELECT * FROM Reservas WHERE ID_reserva = ?";
 
@@ -160,22 +72,28 @@ public class Reservas {
 
             con = DataBaseConnectionBiblio.getConnection();
             st = con.prepareStatement(sql);
-
-            st.setString(1, DNI);
+            st.setString(1, ID);
             ResultSet rs = st.executeQuery();
 
-            if (rs.next()) {
-                System.out.println("ID: " + rs.getString("ID_reserva"));
-                System.out.println("Cliente: " + rs.getString("DNI_Cliente"));
-                System.out.println("Libro: " + rs.getString("TituloLibro"));
-                System.out.println("Fecha Inicio: " + rs.getString("FechaInicio"));
-                System.out.println("Fecha Final: " + rs.getString("FechaFinal"));
-            } else {
-                System.out.println("No se encontró una reserva con el ID proporcionado.");
-            }
+            Frame resultado = new JFrame("Detalles Reserva");
+            resultado.setLayout(new GridLayout(5, 1));
+            resultado.setSize(400, 300);
+            resultado.setLocationRelativeTo(null);
 
+            if (rs.next()) {
+                resultado.add(new JLabel("ID: " + rs.getString("ID_reserva")));
+                resultado.add(new JLabel("DNI Cliente: " + rs.getString("DNI_Cliente")));
+                resultado.add(new JLabel("Libro: " + rs.getString("TituloLibro")));
+                resultado.add(new JLabel("Fecha Inicio: " + rs.getString("FechaInicio")));
+                resultado.add(new JLabel("Fecha Final: " + rs.getString("FechaFinal")));
+
+            } else {
+                resultado.add(new JLabel("No se ha encontrado la reserva"));
+            }
+            resultado.setVisible(true);
         } catch (SQLException ex) {
-            System.out.println("Error al consultar la reserva: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al consultar: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -195,22 +113,10 @@ public class Reservas {
         }
     }
 
-    public static void actualizarReservaPorID() {
+    public static void actualizarReservaPorID(String ID, String DNI, String libro, String fechaInicio, String fechaFinal) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el ID de reserva a actualizar: ");
-        String id_reserva = scanner.nextLine();
-        System.out.print("Escribe DNI del nuevo cliente: ");
-        String DNICli = scanner.nextLine();
-        System.out.print("Escribe nombre del libro: ");
-        String libro = scanner.nextLine();
-        System.out.print("Escribe nueva fecha Inicio: ");
-        String fechaInicio = scanner.nextLine();
-        System.out.print("Escribe nueva fecha Final: ");
-        String fechaFinal = scanner.nextLine();
 
         String sql = "UPDATE Reservas SET DNI_Cliente = ?, TituloLibro = ?, FechaInicio = ?, FechaFinal = ?  WHERE ID_reserva = ?";
 
@@ -218,21 +124,21 @@ public class Reservas {
             con = DataBaseConnectionBiblio.getConnection();
             st = con.prepareStatement(sql);
 
-            st.setString(1, DNICli);
+            st.setString(1, DNI);
             st.setString(1, libro);
             st.setString(3, fechaInicio);
             st.setString(4, fechaFinal);
-            st.setString(5, id_reserva);
+            st.setString(5, ID);
             int filasActualizadas = st.executeUpdate();
 
             if (filasActualizadas > 0) {
-                System.out.println("Reserva actualizada con éxito.");
+                JOptionPane.showMessageDialog(null, "Reserva actualizada con éxito.");
             } else {
-                System.out.println("No se encontró una reserva con el ID proporcionado.");
+                JOptionPane.showMessageDialog(null, "No se encontró la Reserva.", "Error", JOptionPane.WARNING_MESSAGE);
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al actualizar reserva: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al actualizar reserva: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -252,14 +158,10 @@ public class Reservas {
         }
     }
 
-    public static void eliminarReservaPorID() {
+    public static void eliminarReservaPorID(String ID) {
 
         Connection con = null;
         PreparedStatement st = null;
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Escribe el ID de la reserva a eliminar: ");
-        String isbn = scanner.nextLine();
 
         String sql = "DELETE FROM Reservas WHERE ID_reserva = ?";
 
@@ -268,17 +170,17 @@ public class Reservas {
             con = DataBaseConnectionBiblio.getConnection();
             st = con.prepareStatement(sql);
 
-            st.setString(1, isbn);
+            st.setString(1, ID);
             int filasEliminadas = st.executeUpdate();
 
             if (filasEliminadas > 0) {
-                System.out.println("Reserva eliminada con éxito :).");
+                JOptionPane.showMessageDialog(null, "Reserva eliminada con exito.");
             } else {
-                System.out.println("No se encontró una reserva con el ID proporcionado :(.");
+                JOptionPane.showMessageDialog(null, "No se encontró la Reserva.", "Error", JOptionPane.WARNING_MESSAGE);
             }
 
         } catch (SQLException ex) {
-            System.out.println("Error al eliminar reserva: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al eliminar reserva: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 if (st != null && !st.isClosed()) {
@@ -312,15 +214,57 @@ public class Reservas {
             st = con.createStatement();
             rs = st.executeQuery(sql);
 
-            System.out.println("=== Lista de Reservas ===");
+            JFrame mostrarReservasFrame = new JFrame("Lista de Todas las Reservas");
+            mostrarReservasFrame.setSize(800, 600);
+            mostrarReservasFrame.setLocationRelativeTo(null);
+            mostrarReservasFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+            JPanel panelPrincipal = new JPanel();
+            panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
+            JScrollPane scrollPane = new JScrollPane(panelPrincipal);
+            mostrarReservasFrame.add(scrollPane);
+
             while (rs.next()) {
-                System.out.println("ID: " + rs.getString("ID_reserva"));
-                System.out.println("Cliente: " + rs.getString("DNI_Cliente"));
-                System.out.println("Libro: " + rs.getString("TituloLibro"));
-                System.out.println("Fecha Inicio: " + rs.getString("FechaInicio"));
-                System.out.println("Fecha Final: " + rs.getString("FechaFinal"));
-                System.out.println("-----------------------------");
+                JPanel panelReserva = new JPanel(new GridLayout(0, 2, 10, 5));
+                panelReserva.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+                JLabel labelID = new JLabel("ID Reserva:");
+                JLabel valorID = new JLabel(rs.getString("ID_reserva"));
+
+                JLabel labelDNI = new JLabel("DNI Cliente:");
+                JLabel valorDNI = new JLabel(rs.getString("DNI_Cliente"));
+
+                JLabel labelLibro = new JLabel("Libro:");
+                JLabel valorLibro = new JLabel(rs.getString("TituloLibro"));
+
+                JLabel labelInicio = new JLabel("Fecha Inicio:");
+                JLabel valorInicio = new JLabel(rs.getString("FechaInicio"));
+
+                JLabel labelFinal = new JLabel("Fecha Final:");
+                JLabel valorFinal = new JLabel(rs.getString("FechaFinal"));
+
+                panelReserva.add(labelID);
+                panelReserva.add(valorID);
+                panelReserva.add(labelDNI);
+                panelReserva.add(valorDNI);
+                panelReserva.add(labelLibro);
+                panelReserva.add(valorLibro);
+                panelReserva.add(labelInicio);
+                panelReserva.add(valorInicio);
+                panelReserva.add(labelFinal);
+                panelReserva.add(valorFinal);
+
+                panelPrincipal.add(panelReserva);
+                panelPrincipal.add(new JSeparator(SwingConstants.HORIZONTAL));
             }
+
+            if (!rs.isBeforeFirst()) {
+                JLabel noReservas = new JLabel("No hay reservas registradas.");
+                noReservas.setHorizontalAlignment(SwingConstants.CENTER);
+                panelPrincipal.add(noReservas);
+            }
+
+            mostrarReservasFrame.setVisible(true);
 
         } catch (SQLException ex) {
             System.out.println("Error al mostrar reservas: " + ex.getMessage());
